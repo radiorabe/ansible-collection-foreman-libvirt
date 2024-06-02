@@ -1,0 +1,22 @@
+---
+# tasks file for libvirt
+- name: Ensure requirements are in place
+  package:
+    name:
+      - libvirt
+    state: present
+  become: true
+
+- name: Make sure libvirtd is enabled and started
+  ansible.builtin.systemd_service:
+    state: started
+    enabled: true
+    name: libvirtd
+
+- name: Write storage pool definition for {{ storage_pool_name }}
+  ansible.builtin.template:
+      src: templates/storage-pool.xml.j2
+      dest: /tmp/storage-pool.xml
+
+- name: Create storage pool {{ storage_pool_name }}
+  command: virsh pool-create /tmp/storage-pool.xml

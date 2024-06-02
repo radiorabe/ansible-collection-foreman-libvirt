@@ -1,0 +1,4 @@
+---
+# defaults file for kvm_provision
+storage_pool_path: '/var/lib/libvirt/images/'
+storage_pool_name: 'default'

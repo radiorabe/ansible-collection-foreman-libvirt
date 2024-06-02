@@ -1,0 +1,36 @@
+---
+# tasks file for kvm_provision
+- name: Ensure requirements in place
+  delegate_to: localhost
+  package:
+    name:
+      - libguestfs-tools
+    state: present
+  become: true
+
+- name: Download base image
+  delegate_to: localhost
+  get_url:
+    url: "{{ base_image_url }}"
+    dest: "/tmp/{{ base_image_name }}"
+    checksum: "sha256:{{ base_image_sha }}"
+
+- name: Configure the image
+  delegate_to: localhost
+  command: |
+    virt-customize -a /tmp/{{ base_image_name }} \
+    --run-command "dnf install -y subscription-manager"
+
+- name: Copy base image to libvirt storage pool directory {{ libvirt_pool_dir }}
+  copy:
+    dest: "{{ libvirt_pool_dir }}/{{ base_image_name }}"
+    src: "/tmp/{{ base_image_name }}"
+    force: no
+    mode: 0660
+
+- name: Ensure temporary file is deleted
+  delegate_to: localhost
+  file:
+    path: "/tmp/{{ base_image_name }}"
+    state: absent
+  when: cleanup_tmp | bool
