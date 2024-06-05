@@ -1,7 +1,7 @@
 ---
 # tasks file for kvm_provision
 - name: Ensure requirements in place
-  delegate_to: localhost
+  delegate_to: "{{ cloudinit_image_preparation_host }}"
   package:
     name:
       - libguestfs-tools
@@ -9,28 +9,27 @@
   become: true
 
 - name: Download base image
-  delegate_to: localhost
+  delegate_to: "{{ cloudinit_image_preparation_host }}"
   get_url:
-    url: "{{ base_image_url }}"
-    dest: "/tmp/{{ base_image_name }}"
-    checksum: "sha256:{{ base_image_sha }}"
+    url: "{{ cloudinit_image_base_image_url }}"
+    dest: "{{ cloudinit_image_local_files_path }}"
+    checksum: "sha256:{{ cloudinit_image_base_image_sha }}"
 
 - name: Configure the image
-  delegate_to: localhost
+  delegate_to: "{{ cloudinit_image_preparation_host }}"
   command: |
-    virt-customize -a /tmp/{{ base_image_name }} \
+    virt-customize -a {{ cloudinit_image_local_files_path }}/{{ cloudinit_image_base_image_name }} \
     --run-command "dnf install -y subscription-manager"
 
-- name: Copy base image to libvirt storage pool directory {{ libvirt_pool_dir }}
+- name: Copy base image to libvirt storage pool directory {{ cloudinit_image_libvirt_pool_dir }}
   copy:
-    dest: "{{ libvirt_pool_dir }}/{{ base_image_name }}"
-    src: "/tmp/{{ base_image_name }}"
+    dest: "{{ cloudinit_image_libvirt_pool_dir }}/"
+    src: "{{ cloudinit_image_local_files_path }}/{{ cloudinit_image_base_image_name }}"
     force: no
     mode: 0660
 
 - name: Ensure temporary file is deleted
-  delegate_to: localhost
+  delegate_to: "{{ cloudinit_image_preparation_host }}"
   file:
-    path: "/tmp/{{ base_image_name }}"
+    path: "/tmp/{{ cloudinit_image_base_image_name }}"
     state: absent
-  when: cleanup_tmp | bool
