@@ -1,0 +1,20 @@
+namespace: radiorabe
+name: foreman_libvirt
+version: 0.0.0
+readme: README.md
+authors:
+  - Simon Nussbaum <@smirta>
+description: Ansible collection for making a host ready to serve as libvirt compute resource in Foreman.
+license_file: LICENSE
+tags:
+  - radiorabe
+  - kvm
+  - libvirt
+  - qemu
+  - foreman
+  - cloudinit
+dependencies: {}
+repository: https://github.com/radiorabe/ansible-collection-foreman-libvirt
+documentation: https://github.com/radiorabe/ansible-collection-foreman-libvirt/blob/main/README.md
+homepage: hhttps://github.com/radiorabe/ansible-collection-foreman-libvirt
+issues: https://github.com/radiorabe/ansible-collection-foreman-libvirt/issues

@@ -1,38 +1,34 @@
-Role Name
-=========
+# Ansible Role - radiorabe.foreman-libvirt.libvirt
 
-A brief description of the role goes here.
+Install libvirtd, enable and start libvirtd and create default storage pool using [`ansible.builtin.package`](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/package_module.html), [`ansible.builtin.systemd_service`](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/systemd_service_module.html) and [`ansible.builtin.template`](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html).
 
-Requirements
-------------
+## Requirements
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Destination host needs to be able to download and install libvirt package from repository.
 
-Role Variables
---------------
+## Role Variables
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+| Variable | Default | Description |
+| -------- | ------- | ----------- |
+| `libvirt_storage_pool_path` | `/var/lib/libvirt/images/` | libvirt directory storage pool path. |
+| `libvirt_storage_pool_name` | `default` | libvirt directory storage pool name. |
+| `libvirt_libvirt_package_name` | `libvirt` | libvirt package name from repository. |
+| `libvirt_libvirt_service_name` | `libvirtd` | libvirt service name. |
 
-Dependencies
-------------
+## Dependencies
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None
 
-Example Playbook
-----------------
+## Example Playbook
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```yaml
+- hosts: all
+  roles:
+    - libvirt
+```
 
-License
--------
+## License
 
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+This role is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, version 3 of the License.

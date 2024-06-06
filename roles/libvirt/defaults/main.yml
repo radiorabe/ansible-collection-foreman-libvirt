@@ -1,4 +1,6 @@
 ---
-# defaults file for kvm_provision
-storage_pool_path: '/var/lib/libvirt/images/'
-storage_pool_name: 'default'
+# defaults file for libvirt
+libvirt_storage_pool_path: /var/lib/libvirt/images/
+libvirt_storage_pool_name: default
+libvirt_libvirt_package_name: libvirt
+libvirt_libvirt_service_name: libvirtd

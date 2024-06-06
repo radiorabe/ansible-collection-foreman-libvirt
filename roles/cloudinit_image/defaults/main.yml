@@ -1,9 +1,0 @@
----
-# defaults file for kvm_provision
-cloudinit_image_base_image_name: AlmaLinux-9-GenericCloud-latest.x86_64.qcow2
-cloudinit_image_base_image_url: https://repo.almalinux.org/almalinux/9/cloud/x86_64/images/{{ cloudinit_image_base_image_name }}
-cloudinit_image_base_image_sha: bff0885c804c01fff8aac4b70c9ca4f04e8c119f9ee102043838f33e06f58390
-cloudinit_image_libvirt_pool_dir: /var/lib/libvirt/images
-cloudinit_image_local_files_path: "{{ role_path }}/files"
-cloudinit_image_local_download: false
-cloudinit_image_preparation_host: "{{ 'localhost' if cloudinit_image_local_download else inventory_hostname|default(inventory_hostname) }}"

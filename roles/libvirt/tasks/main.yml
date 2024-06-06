@@ -3,7 +3,7 @@
 - name: Ensure requirements are in place
   package:
     name:
-      - libvirt
+      - "{{ libvirt_libvirt_package_name }}"
     state: present
   become: true
 
@@ -11,12 +11,17 @@
   ansible.builtin.systemd_service:
     state: started
     enabled: true
-    name: libvirtd
+    name: "{{ libvirt_libvirt_service_name }}"
 
-- name: Write storage pool definition for {{ storage_pool_name }}
+- name: Write storage pool definition for {{ libvirt_storage_pool_name }}
   ansible.builtin.template:
       src: templates/storage-pool.xml.j2
       dest: /tmp/storage-pool.xml
 
-- name: Create storage pool {{ storage_pool_name }}
+- name: Create storage pool {{ libvirt_storage_pool_name }}
   command: virsh pool-create /tmp/storage-pool.xml
+
+- name: Remove storage pool definition /tmp/storage-pool.xml
+  file:
+    path: /tmp/storage-pool.xml
+    state: absent
