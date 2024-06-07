@@ -4,6 +4,7 @@
   ansible.builtin.package:
     name:
       - "{{ libvirt_libvirt_package_name }}"
+      - "{{ libvirt_qemu_package_name }}"
     state: present
   become: true
 
