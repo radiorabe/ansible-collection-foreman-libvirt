@@ -21,12 +21,15 @@ None
 
 ## Example Playbook
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
 ```yaml
 - hosts: all
   roles:
     - libvirt
+      vars:
+        libvirt_storage_pool_path: /var/lib/libvirt/images/
+        libvirt_storage_pool_name: default
+        libvirt_libvirt_package_name: libvirt
+        libvirt_libvirt_service_name: libvirtd
 ```
 
 ## License
