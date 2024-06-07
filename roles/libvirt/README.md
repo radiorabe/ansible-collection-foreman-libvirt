@@ -10,10 +10,11 @@ Destination host needs to be able to download and install libvirt package from r
 
 | Variable | Default | Description |
 | -------- | ------- | ----------- |
-| `libvirt_storage_pool_path` | `/var/lib/libvirt/images/` | libvirt directory storage pool path. |
-| `libvirt_storage_pool_name` | `default` | libvirt directory storage pool name. |
 | `libvirt_libvirt_package_name` | `libvirt` | libvirt package name from repository. |
 | `libvirt_libvirt_service_name` | `libvirtd` | libvirt service name. |
+| `libvirt_qemu_package_name` | `qemu-kvm` | qemu package name from repository. |
+| `libvirt_storage_pool_name` | `default` | libvirt directory storage pool name. |
+| `libvirt_storage_pool_path` | `/var/lib/libvirt/images/` | libvirt directory storage pool path. |
 
 ## Dependencies
 
@@ -26,10 +27,11 @@ None
   roles:
     - libvirt
       vars:
-        libvirt_storage_pool_path: /var/lib/libvirt/images/
-        libvirt_storage_pool_name: default
         libvirt_libvirt_package_name: libvirt
         libvirt_libvirt_service_name: libvirtd
+        libvirt_qemu_package_name: qemu-kvm
+        libvirt_storage_pool_name: default
+        libvirt_storage_pool_path: /var/lib/libvirt/images/
 ```
 
 ## License
