@@ -13,15 +13,35 @@
     enabled: true
     name: "{{ libvirt_libvirt_service_name }}"
 
+- name: Check if storage pool {{ libvirt_storage_pool_name }} already exists, do nothing if it does
+  command: virsh pool-info {{ libvirt_storage_pool_name }}
+  register: result
+  ignore_errors: true
+
 - name: Write storage pool definition for {{ libvirt_storage_pool_name }}
   template:
       src: templates/storage-pool.xml.j2
       dest: /tmp/storage-pool.xml
+  when: result.rc != 0
 
 - name: Create storage pool {{ libvirt_storage_pool_name }}
-  command: virsh pool-create /tmp/storage-pool.xml
+  command: virsh pool-define /tmp/storage-pool.xml
+  when: result.rc != 0
+
+- name: Create storage pool directory {{ libvirt_storage_pool_path }}
+  command: virsh pool-build {{ libvirt_storage_pool_name }}
+  when: result.rc != 0
+
+- name: Set autostart in storage pool {{ libvirt_storage_pool_name }}
+  command: virsh pool-autostart {{ libvirt_storage_pool_name }}
+  when: result.rc != 0
+
+- name: Start storage pool {{ libvirt_storage_pool_name }}
+  command: virsh pool-start {{ libvirt_storage_pool_name }}
+  when: result.rc != 0
 
 - name: Remove storage pool definition /tmp/storage-pool.xml
   file:
     path: /tmp/storage-pool.xml
     state: absent
+  when: result.rc != 0
