@@ -8,7 +8,7 @@
   become: true
 
 - name: Make sure libvirtd is enabled and started
-  ansible.builtin.systemd_service:
+  ansible.builtin.systemd:
     state: started
     enabled: true
     name: "{{ libvirt_libvirt_service_name }}"
