@@ -8,13 +8,13 @@
   become: true
 
 - name: Make sure libvirtd is enabled and started
-  ansible.builtin.systemd_service:
+  systemd_service:
     state: started
     enabled: true
     name: "{{ libvirt_libvirt_service_name }}"
 
 - name: Write storage pool definition for {{ libvirt_storage_pool_name }}
-  ansible.builtin.template:
+  template:
       src: templates/storage-pool.xml.j2
       dest: /tmp/storage-pool.xml
 
