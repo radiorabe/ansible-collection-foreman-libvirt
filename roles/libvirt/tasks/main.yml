@@ -15,7 +15,7 @@
     name: "{{ libvirt_libvirt_service_name }}"
 
 - name: Check if storage pool {{ libvirt_storage_pool_name }} already exists, do nothing if it does
-  cansible.builtin.command: virsh pool-info {{ libvirt_storage_pool_name }}
+  ansible.builtin.command: virsh pool-info {{ libvirt_storage_pool_name }}
   register: result
   ignore_errors: true
 
