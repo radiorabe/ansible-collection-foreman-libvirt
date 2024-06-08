@@ -1,7 +1,7 @@
 ---
 # tasks file for libvirt
 - name: Ensure requirements are in place
-  ansible.builtin.package:
+  ansible.builtin.dnf:
     name:
       - "{{ libvirt_libvirt_package_name }}"
       - "{{ libvirt_qemu_package_name }}"
@@ -15,7 +15,7 @@
     name: "{{ libvirt_libvirt_service_name }}"
 
 - name: Check if storage pool {{ libvirt_storage_pool_name }} already exists, do nothing if it does
-  cansible.builtin.ommand: virsh pool-info {{ libvirt_storage_pool_name }}
+  cansible.builtin.command: virsh pool-info {{ libvirt_storage_pool_name }}
   register: result
   ignore_errors: true
 
