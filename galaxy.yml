@@ -1,3 +1,4 @@
+---
 namespace: radiorabe
 name: foreman_libvirt
 version: 0.0.0
@@ -13,6 +14,7 @@ tags:
   - qemu
   - foreman
   - cloudinit
+  - infrastructure
 dependencies: {}
 repository: https://github.com/radiorabe/ansible-collection-foreman-libvirt
 documentation: https://github.com/radiorabe/ansible-collection-foreman-libvirt/blob/main/README.md
