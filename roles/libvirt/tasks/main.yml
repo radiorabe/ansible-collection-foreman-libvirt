@@ -14,35 +14,43 @@
     enabled: true
     name: "{{ libvirt_libvirt_service_name }}"
 
-- name: Check if storage pool {{ libvirt_storage_pool_name }} already exists, do nothing if it does
+- name: Check if storage pool exists {{ libvirt_storage_pool_name }}
   ansible.builtin.command: virsh pool-info {{ libvirt_storage_pool_name }}
-  register: result
+  register: _libvirt_virsh_pool_info_result
   ignore_errors: true
+  check_mode: true
+  changed_when: true
 
-- name: Write storage pool definition for {{ libvirt_storage_pool_name }}
-  ansible.builtin.template:
-      src: templates/storage-pool.xml.j2
-      dest: /tmp/storage-pool.xml
-  when: result.rc != 0
+- name: Define, create, configure, and start the storage pool {{ libvirt_storage_pool_name }}
+  when: _libvirt_virsh_pool_info_results.rc
+  block:
+    - name: Write storage pool definition for {{ libvirt_storage_pool_name }}
+      ansible.builtin.template:
+        src: templates/storage-pool.xml.j2
+        dest: /tmp/storage-pool.xml
+        mode: "600"
 
-- name: Create storage pool {{ libvirt_storage_pool_name }}
-  ansible.builtin.command: virsh pool-define /tmp/storage-pool.xml
-  when: result.rc != 0
+    - name: Create storage pool {{ libvirt_storage_pool_name }}
+      ansible.builtin.command: virsh pool-define /tmp/storage-pool.xml
+      register: _libvirt_virsh_pool_define_results
+      changed_when: "'defined' in _libvirt_virsh_pool_define_results.stdout"
 
-- name: Create storage pool directory {{ libvirt_storage_pool_path }}
-  ansible.builtin.command: virsh pool-build {{ libvirt_storage_pool_name }}
-  when: result.rc != 0
+    - name: Create storage pool directory {{ libvirt_storage_pool_path }}
+      ansible.builtin.command: virsh pool-build {{ libvirt_storage_pool_name }}
+      register: _libvirt_virsh_pool_build_results
+      changed_when: "'built' in _libvirt_virsh_pool_build_results.stdout"
 
-- name: Set autostart in storage pool {{ libvirt_storage_pool_name }}
-  ansible.builtin.command: virsh pool-autostart {{ libvirt_storage_pool_name }}
-  when: result.rc != 0
+    - name: Set autostart in storage pool {{ libvirt_storage_pool_name }}
+      ansible.builtin.command: virsh pool-autostart {{ libvirt_storage_pool_name }}
+      register: _libvirt_virsh_pool_autostart_results
+      changed_when: "'marked as autostarted' in _libvirt_virsh_pool_autostart_results.stdout"
 
-- name: Start storage pool {{ libvirt_storage_pool_name }}
-  ansible.builtin.command: virsh pool-start {{ libvirt_storage_pool_name }}
-  when: result.rc != 0
+    - name: Start storage pool {{ libvirt_storage_pool_name }}
+      ansible.builtin.command: virsh pool-start {{ libvirt_storage_pool_name }}
+      register: _libvirt_virsh_pool_start_results
+      changed_when: "'started' in _libvirt_virsh_pool_start_results.stdout"
 
-- name: Remove storage pool definition /tmp/storage-pool.xml
-  ansible.builtin.file:
-    path: /tmp/storage-pool.xml
-    state: absent
-  when: result.rc != 0
+    - name: Remove storage pool definition /tmp/storage-pool.xml
+      ansible.builtin.file:
+        path: /tmp/storage-pool.xml
+        state: absent
